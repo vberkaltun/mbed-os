@@ -3380,6 +3380,34 @@
         ],
         "device_name": "STM32L073RZTx"
     },
+    "MCU_STM32L073xB": {
+        "inherits": [
+            "MCU_STM32L0"
+        ],
+        "public": false,
+        "extra_labels_add": [
+            "STM32L073xB"
+        ],
+        "macros_add": [
+            "STM32L073xx"
+        ],
+        "device_has_add": [
+            "ANALOGOUT",
+            "TRNG"
+        ]
+    },
+    "NUCLEO_L073RB": {
+        "inherits": [
+            "MCU_STM32L073xB"
+        ],
+        "supported_form_factors": [
+            "ARDUINO_UNO"
+        ],
+        "detect_code": [
+            "0447"
+        ],
+        "device_name": "STM32L073RBTx"
+    },
     "MCU_STM32L082xZ": {
         "inherits": [
             "MCU_STM32L0"
