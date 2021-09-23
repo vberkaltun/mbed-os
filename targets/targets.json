@@ -993,10 +993,6 @@
             "GCC_ARM",
             "IAR"
         ],
-        "supported_application_profiles": [
-            "full",
-            "bare-metal"
-        ],
         "macros": [
             "CPU_MK64FN1M0VMD12",
             "FSL_RTOS_MBED",
@@ -3439,6 +3435,34 @@
             "TRNG"
         ]
     },
+    "MCU_STM32L073xB": {
+        "inherits": [
+            "MCU_STM32L0"
+        ],
+        "public": false,
+        "extra_labels_add": [
+            "STM32L073xB"
+        ],
+        "macros_add": [
+            "STM32L073xx"
+        ],
+        "device_has_add": [
+            "ANALOGOUT",
+            "TRNG"
+        ]
+    },
+    "NUCLEO_L073RB": {
+        "inherits": [
+            "MCU_STM32L073xB"
+        ],
+        "supported_form_factors": [
+            "ARDUINO_UNO"
+        ],
+        "detect_code": [
+            "0447"
+        ],
+        "device_name": "STM32L073RBTx"
+    },
     "MCU_STM32L1": {
         "inherits": [
             "MCU_STM32"
@@ -4420,10 +4444,6 @@
             "ARM",
             "GCC_ARM",
             "IAR"
-        ],
-        "supported_application_profiles": [
-            "full",
-            "bare-metal"
         ],
         "extra_labels": [
             "NXP",
@@ -7107,7 +7127,7 @@
             ]
         ],
         "bootloader_supported": true,
-        "forced_reset_timeout": 5
+        "forced_reset_timeout": 3
     },
     "NU_M2354": {
         "inherits": [
