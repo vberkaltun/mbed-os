@@ -4,8 +4,6 @@
 # This is the boilerplate for Mbed OS
 
 cmake_minimum_required(VERSION 3.19.0 FATAL_ERROR)
-set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "time -v")
-set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK "time -v")
 
 project(mbed-os)
 
