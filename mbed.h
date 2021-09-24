@@ -19,23 +19,6 @@
 
 #include "platform/mbed_version.h"
 
-#if MBED_CONF_RTOS_API_PRESENT
-#include "rtos/rtos.h"
-#endif
-
-#if MBED_CONF_NSAPI_PRESENT
-#include "netsocket/nsapi.h"
-#include "netsocket/nsapi_ppp.h"
-#endif
-
-#if MBED_CONF_EVENTS_PRESENT
-#include "events/mbed_events.h"
-#endif
-
-#if MBED_CONF_FILESYSTEM_PRESENT
-#include "filesystem/mbed_filesystem.h"
-#endif
-
 #include "platform/mbed_toolchain.h"
 #include "platform/platform.h"
 #include "platform/mbed_application.h"
