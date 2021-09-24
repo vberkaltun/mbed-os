@@ -476,48 +476,6 @@
         ],
         "device_name": "STM32F446ZETx"
     },
-    "MCU_STM32F469xI": {
-        "inherits": [
-            "MCU_STM32F4"
-        ],
-        "public": false,
-        "extra_labels_add": [
-            "STM32F469xI"
-        ],
-        "macros_add": [
-            "STM32F469xx"
-        ],
-        "device_has_add": [
-            "ANALOGOUT",
-            "CAN",
-            "TRNG"
-        ]
-    },
-    "DISCO_F469NI": {
-        "inherits": [
-            "MCU_STM32F469xI"
-        ],
-        "components_add": [
-            "QSPIF"
-        ],
-        "supported_form_factors": [
-            "ARDUINO_UNO"
-        ],
-        "extra_labels_add": [
-            "N25Q128A"
-        ],
-        "overrides": {
-            "clock_source": "USE_PLL_HSE_XTAL|USE_PLL_HSI"
-        },
-        "detect_code": [
-            "0788"
-        ],
-        "device_has_add": [
-            "QSPI",
-            "USBDEVICE"
-        ],
-        "device_name": "STM32F469NIHx"
-    },
     "MCU_STM32L0": {
         "inherits": [
             "MCU_STM32"
