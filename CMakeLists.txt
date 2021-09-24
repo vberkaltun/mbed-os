@@ -4,58 +4,21 @@
 # This is the boilerplate for Mbed OS
 
 cmake_minimum_required(VERSION 3.19.0 FATAL_ERROR)
-
-option(BUILD_GREENTEA_TESTS "Build greentea tests only." OFF)
-
-if(BUILD_GREENTEA_TESTS)
-    # Usually we rely on the application to set MBED_CONFIG_PATH and include
-    # app.cmake. They are both required if we're building an application to run
-    # on an mbed-target.
-    set(MBED_CONFIG_PATH ${CMAKE_CURRENT_BINARY_DIR} CACHE STRING "")
-    # TODO: Remove when https://github.com/ARMmbed/mbed-os/issues/14518 is fixed
-    include(${CMAKE_CURRENT_LIST_DIR}/tools/cmake/app.cmake)
-endif()
-
-if(${CMAKE_CROSSCOMPILING})
-    include(${MBED_CONFIG_PATH}/mbed_config.cmake)
-    include(mbed_set_linker_script)
-endif()
+set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "time -v")
+set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK "time -v")
 
 project(mbed-os)
 
-# Add all paths to the list files within Mbed OS
-list(APPEND CMAKE_MODULE_PATH
-    "${mbed-os_SOURCE_DIR}/platform/FEATURE_EXPERIMENTAL_API/FEATURE_PSA/TARGET_TFM/TARGET_TFM_LATEST/scripts;${mbed-os_SOURCE_DIR}/targets/TARGET_Cypress/scripts;${mbed-os_SOURCE_DIR}/targets/TARGET_NXP/scripts;${mbed-os_SOURCE_DIR}/targets/TARGET_NUVOTON/scripts/"
-)
-
 add_subdirectory(extern)
 
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    include(CTest)
-
-    if((NOT BUILD_GREENTEA_TESTS) AND BUILD_TESTING)
-        # Building unit tests only.
-        add_definitions(-DUNITTEST)
-        add_subdirectory(UNITTESTS)
-    endif()
-endif()
-
 add_library(mbed-core INTERFACE)
-
 add_library(mbed-os INTERFACE)
 
 target_link_libraries(mbed-os
     INTERFACE
-        mbed-rtos
         mbed-core
 )
 
-add_library(mbed-baremetal INTERFACE)
-
-target_link_libraries(mbed-baremetal
-    INTERFACE
-        mbed-core
-)
 # Validate selected C library type
 # The C library type selected has to match the library that the target can support
 if(${CMAKE_CROSSCOMPILING})
@@ -105,16 +68,6 @@ if(${CMAKE_CROSSCOMPILING})
             ${MBED_CONFIG_DEFINITIONS}
     )
 
-    # Add MBED_TEST_MODE for backward compatibility with Greentea tests written for use with Mbed CLI 1
-    if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-        if(NOT BUILD_GREENTEA_TESTS)
-            target_compile_definitions(${PROJECT_NAME}
-                INTERFACE
-                    MBED_TEST_MODE
-            )
-        endif()
-    endif()
-
     # We need to generate a "response file" to pass to the C preprocessor when we preprocess the linker
     # script, because of path length limitations on Windows. We set the response file and bind the path
     # to a global property here. The MBED_TARGET being built queries this global property when it sets
@@ -132,18 +85,11 @@ if(${CMAKE_CROSSCOMPILING})
     # Add compile definitions for backward compatibility with the toolchain
     # supported. New source files should instead check for __GNUC__ and __clang__
     # for the GCC_ARM and ARM toolchains respectively.
-    if(${MBED_TOOLCHAIN} STREQUAL "GCC_ARM")
-        target_compile_definitions(mbed-core
-            INTERFACE
-                TOOLCHAIN_GCC_ARM
-                TOOLCHAIN_GCC
-        )
-    elseif(${MBED_TOOLCHAIN} STREQUAL "ARM")
-        target_compile_definitions(mbed-core
-            INTERFACE
-                TOOLCHAIN_ARM
-        )
-    endif()
+    target_compile_definitions(mbed-core
+        INTERFACE
+            TOOLCHAIN_GCC_ARM
+            TOOLCHAIN_GCC
+    )
 endif()
 
 # Include mbed.h and config from generate folder
@@ -152,52 +98,14 @@ target_include_directories(mbed-core
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-# These targets are made visible here so their source files which
-# are spread in different directories can be referenced and can be linked against
-# by libraries that depend on them.
-# TODO CMake: Should the source files be moved?
-add_library(mbed-device_key INTERFACE)
-add_library(mbed-rtos INTERFACE)
-
 # Include targets/ first, because any post-build hook needs to be defined
 # before other parts of Mbed OS can add greentea tests which require
 # mbed_set_post_build().
 add_subdirectory(targets)
-
 add_subdirectory(cmsis)
 add_subdirectory(drivers)
 add_subdirectory(hal)
 add_subdirectory(platform)
-add_subdirectory(rtos)
-add_subdirectory(storage)
-add_subdirectory(events)
-add_subdirectory(connectivity)
-
-# The directories below contain optional target libraries
-add_subdirectory(drivers/device_key EXCLUDE_FROM_ALL)
-add_subdirectory(drivers/usb EXCLUDE_FROM_ALL)
-add_subdirectory(features EXCLUDE_FROM_ALL)
-add_subdirectory(cmsis/CMSIS_5/CMSIS/RTOS2 EXCLUDE_FROM_ALL)
-add_subdirectory(cmsis/device/rtos EXCLUDE_FROM_ALL)
-
-
-if(${CMAKE_CROSSCOMPILING})
-    # Ensure the words that make up the Mbed target name are separated with a hyphen, lowercase, and with the `mbed-` prefix.
-    string(TOLOWER ${MBED_TARGET} MBED_TARGET_CONVERTED)
-    string(REPLACE "_" "-" MBED_TARGET_CONVERTED ${MBED_TARGET_CONVERTED})
-    string(PREPEND MBED_TARGET_CONVERTED "mbed-")
-
-    target_link_libraries(mbed-core INTERFACE ${MBED_TARGET_CONVERTED})
-endif()
-
-# Ninja requires to be forced for response files
-if ("${CMAKE_GENERATOR}" MATCHES "Ninja")
-    # known issue ARMClang and Ninja with response files for windows
-    # https://gitlab.kitware.com/cmake/cmake/-/issues/21093
-    if((CMAKE_HOST_SYSTEM_NAME MATCHES "Windows" AND NOT CMAKE_CXX_COMPILER_ID MATCHES "ARMClang"))
-        set(CMAKE_NINJA_FORCE_RESPONSE_FILE 1 CACHE INTERNAL "")
-    endif()
-endif()
 
 # TODO: Remove once all example applications have removed it
 function(mbed_configure_app_target target)
