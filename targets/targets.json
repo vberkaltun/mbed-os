@@ -14,7 +14,7 @@
         "detect_code": [],
         "public": false,
         "c_lib": "std",
-        "bootloader_supported": false,
+        "bootloader_supported": true,
         "static_memory_defines": true,
         "printf_lib": "minimal-printf",
         "supported_c_libs": {
@@ -90,7 +90,6 @@
             "USE_HAL_DRIVER",
             "USE_FULL_LL_DRIVER"
         ],
-        "bootloader_supported": false,
         "config": {
             "lse_available": {
                 "help": "Define if a Low Speed External xtal (LSE) is available on the board (0 = No, 1 = Yes). If Yes, the LSE will be used to clock the RTC, LPUART, ... otherwise the Low Speed Internal clock (LSI) will be used",
