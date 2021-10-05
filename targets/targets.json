@@ -41,7 +41,7 @@
             },
             "boot-stack-size": {
                 "help": "Define the boot stack size in bytes. This value must be a multiple of 8",
-                "value": "0x400"
+                "value": "0x200"
             },
             "mpu-rom-end": {
                 "help": "Last address of ROM protected by the MPU",
