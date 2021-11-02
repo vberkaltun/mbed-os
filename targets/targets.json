@@ -119,9 +119,9 @@
         },
         "device_has": [
             "USTICKER",
-            "RTC",
             "ANALOGIN",
             "ANALOGOUT",
+            "SPI",
             "I2C",
             "I2CSLAVE",
             "I2C_ASYNCH",
